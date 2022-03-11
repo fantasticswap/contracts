@@ -602,10 +602,10 @@
     "@ethersproject/properties" "^5.5.0"
     "@ethersproject/strings" "^5.5.0"
 
-"@fantasticswap/core-sdk@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@fantasticswap/core-sdk/-/core-sdk-0.1.0.tgz#d7ae5094b2830c8bddc4f3e12149022fc6d325cc"
-  integrity sha512-bjI3d4YAiNtTVVhe0Rj8845JOD/Q5x0r0KgR/XZWkiHEjPosM22Gj/2BqIWdlgbBPfjOUJ/mb9DywCd5oNhjag==
+"@fantasticswap/core-sdk@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@fantasticswap/core-sdk/-/core-sdk-0.1.4.tgz#64fc160676127b5b4ac092ba2b1c72b94604fe87"
+  integrity sha512-RQgG744kczGZAm4xETIkavkBgEJRiC3gRyCBY5Opb0OpjnSMURWUT7ZTVKPv/y9ZeXc4+yNGulo9TSzU7iYT+g==
   dependencies:
     "@ethersproject/address" "^5.4.0"
     "@ethersproject/bignumber" "^5.4.0"

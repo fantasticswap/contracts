@@ -5,9 +5,6 @@ pragma solidity 0.6.12;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-// WARNING: There is a known vuln contained within this contract related to vote delegation,
-// it's NOT recommended to use this in production.
-
 // FantasticToken with Governance.
 contract FantasticToken is ERC20("FantasticToken", "FANTA"), Ownable {
     /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (FantasticChef).

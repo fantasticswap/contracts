@@ -1,5 +1,5 @@
 import { DeployFunction } from "hardhat-deploy/types"
-import { ChainId, WEVMOS_ADDRESS } from '@fantasticswap/core-sdk'
+import { ChainId, WEVMOS_ADDRESS } from "@fantasticswap/core-sdk"
 
 const func: DeployFunction = async ({ deployments: { deploy, get: getDeployment }, getChainId, getNamedAccounts }) => {
   const { deployer } = await getNamedAccounts()

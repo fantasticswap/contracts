@@ -17,18 +17,18 @@ const func: DeployFunction = async ({ deployments, ethers, getChainId, getNamedA
     throw Error("No FANTA!")
   }
 
-  await deploy('FantasticChef', {
+  await deploy("FantasticChef", {
     from: deployer,
     args: [fantaAddress, dev],
     log: true,
-    deterministicDeployment: false
+    deterministicDeployment: false,
   })
 
-  const chef = await ethers.getContract('FantasticChef')
-  await (await chef.setFantaPerSecond(ethers.utils.parseUnits('0.1', 18))).wait()
+  const chef = await ethers.getContract("FantasticChef")
+  await (await chef.setFantaPerSecond(ethers.utils.parseUnits("0.1", 18))).wait()
   if ((await chef.owner()) !== dev) {
-    console.log("Transfer ownership of FantasticChef to dev");
-    await (await chef.transferOwnership(dev, true, false)).wait();
+    console.log("Transfer ownership of FantasticChef to dev")
+    await (await chef.transferOwnership(dev, true, false)).wait()
   }
 }
 

@@ -77,9 +77,17 @@ const config: HardhatUserConfig = {
       saveDeployments: true,
       tags: ["test", "local"],
     },
-    // TODO
-    // 'evmos': {},
+    'evmos': {
+      chainId: 9001,
+      url: `https://eth.bd.evmos.org:8545`,
+      saveDeployments: true,
+      live: true,
+      accounts,
+      // TODO
+      gasPrice: 10,
+    },
     'evmos-testnet': {
+      chainId: 9000,
       url: `https://evmos-archive-testnet.api.bdnodes.net:8545`,
       saveDeployments: true,
       live: true,

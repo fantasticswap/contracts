@@ -1,8 +1,6 @@
 import { constants, utils } from "ethers"
 import { task, types } from "hardhat/config"
 
-import { FantasticChef, UniswapV2Factory } from "../types"
-
 const { AddressZero } = constants
 const { isAddress } = utils
 
@@ -26,7 +24,7 @@ task<Args>("addFarm", "Add a farm", async (args, { ethers: { getContract, getCon
       console.error('invalid lp or token0 or token1 address')
       return
     }
-    const factory = await getContract<UniswapV2Factory>('UniswapV2Factory')
+    const factory = await getContract('UniswapV2Factory')
     lpAddress = await factory.getPair(args.t0, args.t1)
     if (!isAddress(lpAddress)) {
       console.error('can not get pair')
@@ -34,7 +32,7 @@ task<Args>("addFarm", "Add a farm", async (args, { ethers: { getContract, getCon
     }
   }
 
-  const chef = await getContractAt<FantasticChef>("FantasticChef", args.chef)
+  const chef = await getContractAt("FantasticChef", args.chef)
   try {
     const tx = await chef.add(args.p, lpAddress, AddressZero)
     console.log("tx hash:", tx.hash)

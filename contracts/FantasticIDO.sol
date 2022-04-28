@@ -164,8 +164,8 @@ contract FantasticIDO is Ownable {
         require(totalAmount == 0, "need all babels to be sold");
 
         /// @dev: create lp with 0.04 OTHER per FANTA
-        IERC20(FANTA).transfer(otherFANTALP, 2500000 * 1e18);
-        IERC20(OTHER).transfer(otherFANTALP, 100000 * 1e6);
+        IERC20(FANTA).transfer(otherFANTALP, 10000000 * 1e18);
+        IERC20(OTHER).transfer(otherFANTALP, 400000 * 1e6);
         IUniswapV2Pair(otherFANTALP).mint(address(this));
 
         finalized = true;

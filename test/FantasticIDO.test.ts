@@ -52,10 +52,43 @@ describe("FantasticIDO", async function () {
 
     await (await usdc.approve(ido.address, usdcAmount)).wait()
   })
+  
+  describe("claim", async function () {
+    it ("not purchased", async function () {
+      (await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
+
+      await (await ido.finalize()).wait()
+
+      const user = await ethers.getNamedSigner('user')
+      await expect(ido.claim(user.address)).to.be.revertedWith("not purchased")
+    })
+
+    it("unfinalized", async function () {
+      (await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
+
+      await expect(ido.claim(deployer.address)).to.be.revertedWith("only can claim after finalized")
+    })
+
+    it("finalized", async function () {
+      (await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
+
+      await (await ido.finalize()).wait()
+      
+      await (await ido.claim(deployer.address)).wait()
+      
+      const fantaBalance = await fanta.balanceOf(deployer.address)
+      
+      expect(fantaBalance).to.equal(WeiPerEther.mul(5_000_000))
+
+      const idoFantaBalance = await fanta.balanceOf(ido.address)
+      
+      expect(idoFantaBalance).to.equal(mintAmount.sub(WeiPerEther.mul(7_500_000)))
+    })
+  })
 
   describe("withdraw", async function () {
     it("initialized", async function () {
-      ;(await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
+      (await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
 
       await (await ido.cancel()).wait()
       await (await ido.withdraw()).wait()
@@ -67,7 +100,7 @@ describe("FantasticIDO", async function () {
 
   describe("finalize", async function () {
     it("soft cap", async function () {
-      ;(await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
+      (await ido.purchaseFANTA(parseUnits("100000", 6))).wait()
 
       await (await ido.finalize()).wait()
 
@@ -86,7 +119,7 @@ describe("FantasticIDO", async function () {
     })
 
     it("less than soft top", async function () {
-      ;(await ido.purchaseFANTA(parseUnits("100000", 6).sub(1))).wait()
+      (await ido.purchaseFANTA(parseUnits("100000", 6).sub(1))).wait()
 
       await expect(ido.finalize()).to.be.revertedWith("at least ten fantas to be sold")
     })

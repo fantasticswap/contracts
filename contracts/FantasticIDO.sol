@@ -156,7 +156,7 @@ contract FantasticIDO is Ownable {
     function claim(address _recipient) external {
         require(finalized, "only can claim after finalized");
         require(purchasedAmounts[_recipient] > 0, "not purchased");
-        
+
         uint256 amount = purchasedAmounts[_recipient];
         purchasedAmounts[_recipient] = 0;
 
@@ -167,7 +167,7 @@ contract FantasticIDO is Ownable {
         require(totalAmount <= 15_000_000 * 1e18, "at least ten fantas to be sold");
 
         finalized = true;
-        
+
         uint256 totalPurchasedAmount = 20_000_000 * 1e18 - totalAmount;
         uint256 otherAmount = IERC20(OTHER).balanceOf(address(this));
         IERC20(FANTA).transfer(otherFANTALP, totalPurchasedAmount / 2);

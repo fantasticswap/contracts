@@ -26,7 +26,7 @@ contract FantasticIDO is Ownable {
     bool public whiteListEnabled;
     bool public cancelled;
     bool public finalized;
-
+    
     mapping(address => bool) public boughtFANTA;
     mapping(address => bool) public whiteListed;
 
@@ -156,18 +156,22 @@ contract FantasticIDO is Ownable {
     function claim(address _recipient) external {
         require(finalized, "only can claim after finalized");
         require(purchasedAmounts[_recipient] > 0, "not purchased");
-        IERC20(FANTA).transfer(_recipient, purchasedAmounts[_recipient]);
+        
+        uint256 amount = purchasedAmounts[_recipient];
         purchasedAmounts[_recipient] = 0;
+
+        IERC20(FANTA).transfer(_recipient, amount);
     }
 
     function finalize() external onlyOwner {
-        require(totalAmount == 0, "need all babels to be sold");
-
-        /// @dev: create lp with 0.04 OTHER per FANTA
-        IERC20(FANTA).transfer(otherFANTALP, 10000000 * 1e18);
-        IERC20(OTHER).transfer(otherFANTALP, 400000 * 1e6);
-        IUniswapV2Pair(otherFANTALP).mint(address(this));
+        require(totalAmount <= 15_000_000 * 1e18, "at least ten fantas to be sold");
 
         finalized = true;
+        
+        uint256 totalPurchasedAmount = 20_000_000 * 1e18 - totalAmount;
+        uint256 otherAmount = IERC20(OTHER).balanceOf(address(this));
+        IERC20(FANTA).transfer(otherFANTALP, totalPurchasedAmount / 2);
+        IERC20(OTHER).transfer(otherFANTALP, otherAmount);
+        IUniswapV2Pair(otherFANTALP).mint(address(this));
     }
 }

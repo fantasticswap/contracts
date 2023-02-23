@@ -8,12 +8,16 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/math/Math.sol";
 import "./uniswapv2/interfaces/IUniswapV2Pair.sol";
 
+interface IWFIL {
+    function deposit() external payable;
+}
+
 contract FantasticIDO is Ownable {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
 
     address public FANTA;
-    address public OTHER; // Stable Coin
+    address public OTHER;
     address public otherFANTALP;
 
     uint256 public totalAmount;
@@ -93,7 +97,7 @@ contract FantasticIDO is Ownable {
         }
     }
 
-    function purchaseFANTA(uint256 _amountOTHER) external returns (bool) {
+    function purchaseFANTA() public payable returns (bool) {
         require(saleStarted() == true, "Not started");
         require(
             !whiteListEnabled || whiteListed[msg.sender] == true,
@@ -103,7 +107,7 @@ contract FantasticIDO is Ownable {
 
         boughtFANTA[msg.sender] = true;
 
-        uint256 _purchaseAmount = _calculateSaleQuote(_amountOTHER);
+        uint256 _purchaseAmount = _calculateSaleQuote(msg.value);
 
         require(_purchaseAmount <= getAllotmentPerBuyer(), "More than allowed");
         if (whiteListEnabled) {
@@ -114,8 +118,6 @@ contract FantasticIDO is Ownable {
 
         purchasedAmounts[msg.sender] = _purchaseAmount;
         buyers.push(msg.sender);
-
-        IERC20(OTHER).safeTransferFrom(msg.sender, address(this), _amountOTHER);
 
         return true;
     }
@@ -164,14 +166,18 @@ contract FantasticIDO is Ownable {
     }
 
     function finalize() external onlyOwner {
-        require(totalAmount <= 15_000_000 * 1e18, "at least ten fantas to be sold");
+        require(totalAmount <= 15_000_000 * 1e18, "at least 5_000_000 fantas to be sold");
 
         finalized = true;
 
+        IWFIL(OTHER).deposit{ value: address(this).balance }();
+
         uint256 totalPurchasedAmount = 20_000_000 * 1e18 - totalAmount;
-        uint256 otherAmount = IERC20(OTHER).balanceOf(address(this));
         IERC20(FANTA).transfer(otherFANTALP, totalPurchasedAmount / 2);
+
+        uint256 otherAmount = IERC20(OTHER).balanceOf(address(this));
         IERC20(OTHER).transfer(otherFANTALP, otherAmount);
+
         IUniswapV2Pair(otherFANTALP).mint(address(this));
     }
 }

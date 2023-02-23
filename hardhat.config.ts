@@ -78,6 +78,11 @@ const config: HardhatUserConfig = {
       saveDeployments: true,
       tags: ["test", "local"],
     },
+    'filecoin-testnet': {
+      chainId: 3141,
+      url: 'https://api.hyperspace.node.glif.io/rpc/v1',
+      accounts,
+    },
     'evmos': {
       chainId: 9001,
       url: `https://eth.bd.evmos.org:8545`,
@@ -344,6 +349,16 @@ const config: HardhatUserConfig = {
   },
   solidity: {
     compilers: [
+      {
+        version: "0.5.17",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 200,
+          },
+        },
+      },
+
       {
         version: "0.6.12",
         settings: {
